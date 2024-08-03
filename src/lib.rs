@@ -1,8 +1,6 @@
 pub mod traits;
 pub mod api;
-
-
-
+pub mod view;
 
 use std::fs::File;
 use std::io::Read;
@@ -12,7 +10,6 @@ use crate::api::homepage::user_home_page_content_response::UserHomePageContentRe
 use crate::api::login::twitter_login::{CookieData, Flow, GetFlowTokenRequest, GetGuestTokenRequest, save_cookies_to_file, TwitterLoginRequest, VerifyCredentials};
 use crate::traits::{IntoRequestBuilder, SendRequestAndLog};
 use anyhow::{anyhow, Result};
-use api::*;
 use reqwest::{Client, ClientBuilder, RequestBuilder, Response, Url};
 use serde_json::json;
 use crate::api::follow::twitter_follow_relation_request::GetUserFollowersListRequest;
@@ -385,6 +382,7 @@ impl ReAPI {
 
 #[cfg(test)]
 mod tests {
+    use crate::view::tweet_detail_view::UserTweetList;
     use super::*;
 
     #[tokio::test]
@@ -396,14 +394,14 @@ mod tests {
         let req = TwitterLoginRequest {
             user_name: name,
             password: pwd,
-            cookie_file_path: Some("ouhuang_cookies.json".to_string()),
+            cookie_file_path: Some("xiaohao1_cookies.json".to_string()),
         };
         let res = api.login_in(req).await;
     }
 
     #[tokio::test]
     pub async fn test_login_with_cookies()-> Result<(),anyhow::Error> {
-        let mut api = ReAPI::with_cookie_file("ouhuang_cookies.json").map_err(|e| anyhow!("error: {}", e))?;
+        let mut api = ReAPI::with_cookie_file("xiaohao1_cookies.json").map_err(|e| anyhow!("error: {}", e))?;
         let is_logged_in = api.is_logged_in().await;
         assert!(is_logged_in);
         Ok(())
@@ -412,7 +410,7 @@ mod tests {
     // get home page
     #[tokio::test]
     async fn test_get_user_home_page_content() {
-        let mut api = ReAPI::with_cookie_file("ouhuang_cookies.json").unwrap();
+        let mut api = ReAPI::with_cookie_file("xiaohao1_cookies.json").unwrap();
         // https://x.com/xiaomucrypto
         let req = GetUserHomePageContentRequest {
             user_id: "1507631541303713793".to_string(),
@@ -420,7 +418,25 @@ mod tests {
             bearer_token: BEARER_TOKEN.to_string(),
         };
         let res = api.get_user_home_page_content(req).await.unwrap();
-        println!("{:?}", res);
+        // pretty json
+        println!("{}", serde_json::to_string_pretty(&res).unwrap());
+    }
+
+
+    // get home page
+    #[tokio::test]
+    async fn test_get_user_home_page_content_view() {
+        let mut api = ReAPI::with_cookie_file("xiaohao1_cookies.json").unwrap();
+        // https://x.com/xiaomucrypto
+        let req = GetUserHomePageContentRequest {
+            user_id: "1507631541303713793".to_string(),
+            csrf_token: api.csrf_token.clone(),
+            bearer_token: BEARER_TOKEN.to_string(),
+        };
+        let res = api.get_user_home_page_content(req).await.unwrap();
+        let tweet_list:UserTweetList = res.try_into().unwrap();
+        // pretty json
+        println!("{}", serde_json::to_string_pretty(&tweet_list).unwrap());
     }
 
     #[tokio::test]

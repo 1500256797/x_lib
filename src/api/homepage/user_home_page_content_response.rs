@@ -445,7 +445,7 @@ pub struct PurpleLegacy {
     media_count: i64,
 
     #[serde(rename = "name")]
-    name: String,
+    pub(crate) name: String,
 
     #[serde(rename = "normal_followers_count")]
     normal_followers_count: i64,
@@ -466,7 +466,7 @@ pub struct PurpleLegacy {
     profile_interstitial_type: String,
 
     #[serde(rename = "screen_name")]
-    screen_name: String,
+    pub(crate) screen_name: String,
 
     #[serde(rename = "statuses_count")]
     statuses_count: i64,
@@ -604,22 +604,23 @@ pub struct FluffyLegacy {
     pub extended_entities: Option<ExtendedEntities>,
 }
 
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Entit {
     #[serde(rename = "user_mentions")]
-    user_mentions: Vec<UserMention>,
+    pub user_mentions: Vec<UserMention>,
 
     #[serde(rename = "urls")]
-    urls: Vec<Url>,
+    pub urls: Vec<Url>,
 
     #[serde(rename = "hashtags")]
-    hashtags: Vec<Hashtag>,
+    pub hashtags: Vec<Hashtag>,
 
     #[serde(rename = "symbols")]
-    symbols: Vec<Hashtag>,
+    pub symbols: Vec<Hashtag>,
 
     #[serde(rename = "media")]
-    media: Option<Vec<Media>>,
+    pub media: Option<Vec<Media>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -649,7 +650,7 @@ pub struct Media {
     media_key: String,
 
     #[serde(rename = "media_url_https")]
-    media_url_https: String,
+    pub media_url_https: String,
 
     #[serde(rename = "type")]
     media_type: String,
@@ -817,13 +818,13 @@ pub struct ExtendedEntities {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct QuotedStatusPermalink {
     #[serde(rename = "url")]
-    url: String,
+    pub url: String,
 
     #[serde(rename = "expanded")]
-    expanded: String,
+    pub expanded: String,
 
     #[serde(rename = "display")]
-    display: String,
+    pub display: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
