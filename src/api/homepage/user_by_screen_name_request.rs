@@ -1,12 +1,10 @@
-use serde_json::json;
 use crate::traits::IntoRequestBuilder;
+use serde_json::json;
 
 pub struct UserByScreenNameRequest {
     pub screen_name: String,
-    pub bearer_token: String,
-    pub csrf_token: String,
+    pub(crate) bearer_token: String,
 }
-
 
 impl IntoRequestBuilder for UserByScreenNameRequest {
     fn into_request(self, client: reqwest::Client) -> reqwest::RequestBuilder {
@@ -20,12 +18,10 @@ impl IntoRequestBuilder for UserByScreenNameRequest {
             ("features", features.to_string()),
             ("fieldToggles", field_toggles.to_string()),
         ];
-        
+
         client
             .get("https://api.x.com/graphql/Yka-W8dz7RaEuQNkroPkYw/UserByScreenName")
             .header("Authorization", format!("Bearer {}", self.bearer_token))
-            .header("X-CSRF-Token", self.csrf_token.to_owned())
             .query(&query_param)
-            
     }
 }

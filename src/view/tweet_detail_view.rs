@@ -1,7 +1,7 @@
-use serde_derive::{Deserialize, Serialize};
 use crate::api::homepage::user_home_page_content_response::UserHomePageContentResponse;
+use serde_derive::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug,Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct TweetDetail {
     // 推文ID和用户ID
     pub tweet_id: String,
@@ -18,23 +18,23 @@ pub struct TweetDetail {
     // 语言
     pub lang: String,
     // 媒体信息（如图片或视频）的url链接
-    pub media:Vec<String>,
+    pub media: Vec<String>,
     // 引用推文信息
     pub qutoe_tweet_url: Option<String>,
 }
-#[derive(Serialize, Deserialize, Debug,Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct UserProfile {
     pub user_id: String,
     pub user_name: String,
     pub user_home_page_url: String,
 }
-#[derive(Serialize, Deserialize, Debug,Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct UserTweetList {
     pub user_profile: UserProfile,
     pub tweet_list: Vec<TweetDetail>,
 }
 
-#[derive(Debug, Deserialize,thiserror::Error)]
+#[derive(Debug, Deserialize, thiserror::Error)]
 pub enum UserHomePageContentResponseError {
     #[error("UserHomePageContentResponse data is invalid , please check the api")]
     DataError,
@@ -50,24 +50,41 @@ impl TryFrom<UserHomePageContentResponse> for UserTweetList {
             user_home_page_url: "".to_string(),
         };
         let mut tweet_list = vec![];
-        let instructions = value.data.ok_or(UserHomePageContentResponseError::DataError)?.user.result.timeline_v2.timeline.instructions;
+        let instructions = value
+            .data
+            .ok_or(UserHomePageContentResponseError::DataError)?
+            .user
+            .result
+            .timeline_v2
+            .timeline
+            .instructions;
 
         // get user profile from first instruction
         instructions.iter().for_each(|instruction| {
             if let Some(entries) = &instruction.entries {
                 entries.iter().for_each(|entry| {
                     if let Some(content) = entry.content.item_content.as_ref() {
-                        let user_profile_data = content.tweet_results.clone().result.unwrap().core.user_results.unwrap().result;
+                        let user_profile_data = content
+                            .tweet_results
+                            .clone()
+                            .result
+                            .unwrap()
+                            .core
+                            .user_results
+                            .unwrap()
+                            .result;
                         user_profile = UserProfile {
                             user_id: user_profile_data.rest_id.clone(),
                             user_name: user_profile_data.legacy.name.clone(),
-                            user_home_page_url: format!("https://twitter.com/{}", user_profile_data.legacy.screen_name.clone()),
+                            user_home_page_url: format!(
+                                "https://twitter.com/{}",
+                                user_profile_data.legacy.screen_name.clone()
+                            ),
                         };
                     }
                 });
             }
         });
-        
 
         instructions.iter().for_each(|instruction| {
             if let Some(entries) = &instruction.entries {
@@ -80,7 +97,10 @@ impl TryFrom<UserHomePageContentResponse> for UserTweetList {
                         let mut tweet_media_urls: Vec<String> = Vec::new();
                         match medias {
                             Some(media) => {
-                                tweet_media_urls = media.iter().map(|x| x.media_url_https.clone()).collect::<Vec<String>>();
+                                tweet_media_urls = media
+                                    .iter()
+                                    .map(|x| x.media_url_https.clone())
+                                    .collect::<Vec<String>>();
                             }
                             None => {}
                         }
@@ -95,7 +115,10 @@ impl TryFrom<UserHomePageContentResponse> for UserTweetList {
                             bookmark_count: tweet_detail_legacy.bookmark_count,
                             lang: tweet_detail_legacy.lang.clone(),
                             media: tweet_media_urls,
-                            qutoe_tweet_url: tweet_detail_legacy.quoted_status_permalink.as_ref().map(|x| x.expanded.clone()),
+                            qutoe_tweet_url: tweet_detail_legacy
+                                .quoted_status_permalink
+                                .as_ref()
+                                .map(|x| x.expanded.clone()),
                         };
                         tweet_list.push(tweet_detail);
                     }

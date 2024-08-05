@@ -1,21 +1,26 @@
-pub mod traits;
 pub mod api;
+pub mod traits;
 pub mod view;
 
-use std::fs::File;
-use std::io::Read;
-use std::sync::Arc;
-use crate::api::homepage::user_home_page_content_request::GetUserHomePageContentRequest;
-use crate::api::homepage::user_home_page_content_response::UserHomePageContentResponse;
-use crate::api::login::twitter_login::{CookieData, Flow, GetFlowTokenRequest, GetGuestTokenRequest, save_cookies_to_file, TwitterLoginRequest, VerifyCredentials};
-use crate::traits::{IntoRequestBuilder, SendRequestAndLog};
-use anyhow::{anyhow, Result};
-use reqwest::{Client, ClientBuilder, RequestBuilder, Response, Url};
-use serde_json::json;
 use crate::api::follow::twitter_follow_relation_request::GetUserFollowersListRequest;
 use crate::api::follow::twitter_followers_list_response::FollowersListResp;
 use crate::api::homepage::user_by_screen_name_request::UserByScreenNameRequest;
 use crate::api::homepage::user_by_screen_name_response::UserByScreenNameResponse;
+use crate::api::homepage::user_home_page_content_request::GetUserHomePageContentRequest;
+use crate::api::homepage::user_home_page_content_response::UserHomePageContentResponse;
+use crate::api::login::twitter_login::{
+    save_cookies_to_file, CookieData, Flow, GetFlowTokenRequest, GetGuestTokenRequest,
+    TwitterLoginRequest, VerifyCredentials,
+};
+use crate::traits::{IntoRequestBuilder, SendRequestAndLog};
+use anyhow::{anyhow, Result};
+use reqwest::cookie::Cookie;
+use reqwest::{Client, ClientBuilder, RequestBuilder, Response, Url};
+use serde_json::json;
+use std::collections::HashMap;
+use std::fs::File;
+use std::io::Read;
+use std::sync::Arc;
 
 pub const LOGIN_URL: &str = "https://api.twitter.com/1.1/onboarding/task.json";
 pub const LOGOUR_URL: &str = "https://api.twitter.com/1.1/account/logout.json";
@@ -52,6 +57,7 @@ fn parse_flow(flow: Flow) -> Result<String, anyhow::Error> {
 }
 impl SendRequestAndLog for RequestBuilder {
     async fn send_request_and_log(self) -> Result<Response> {
+        // print request cookies
         let res = self.send().await?;
         let status = res.status();
         // match status code
@@ -99,11 +105,78 @@ impl ReAPI {
             guest_token: String::from(""),
         };
     }
+
+    pub async fn get_guest_id_cookie(&mut self) -> Result<()> {
+        let mut form = HashMap::new();
+        form.insert("debug", "true");
+        form.insert("log", r#"[{"_category_":"client_event","format_version":2,"triggered_on":1722866376530,"items":[{"item_type":0,"id":"1568614885919191041","position":0,"sort_index":"1820458113438842880","impression_details":{"visibility_start":1722866011162,"visibility_end":1722866376529},"first_impression":true,"author_id":"42352056","is_viewer_follows_tweet_author":false,"is_tweet_author_follows_viewer":false,"is_viewer_super_following_tweet_author":false,"is_viewer_super_followed_by_tweet_author":false,"is_tweet_author_super_followable":false,"card_name":"summary_large_image","card_platform":"Web-12","card_url":"https://t.co/wuA9n3gxfG","vanity_url":"guoyu.mirror.xyz","media_details":{"photo_count":0,"content_id":"","publisher_id":"42352056","media_type":-1,"dynamic_ads":false},"media_details_v2":[],"engagement_metrics":{"reply_count":288,"retweet_count":3379,"favorite_count":9387,"quote_count":171}}],"event_namespace":{"page":"profile","section":"tweets","component":"stream","element":"linger","action":"results","client":"m5"},"client_event_sequence_start_timestamp":1722866008056,"client_event_sequence_number":9,"client_app_id":"3033300"}]"#);
+        let response = self.client.post("https://api.x.com/1.1/jot/client_event.json")
+                .header("Host", "api.x.com")
+                .header("pragma", "no-cache")
+                .header("cache-control", "no-cache")
+                .header("sec-ch-ua", "\"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"")
+                .header("x-twitter-client-language", "zh-cn")
+                .header("sec-ch-ua-mobile", "?0")
+                .header("authorization", "Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA")
+                .header("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36")
+                .header("content-type", "application/x-www-form-urlencoded")
+                .header("x-client-transaction-id", "ra+MSMPaWTdwYhGtBLP2peYl9IJlUjEdBtTUB+WFsg7OzPGSu2Z5Unn78cVcg3VYX/XazK9NJQZzY1R8QHEPXzLGKPtIrg")
+                .header("x-twitter-active-user", "yes")
+                .header("sec-ch-ua-platform", "\"macOS\"")
+                .header("accept", "*/*")
+                .header("origin", "https://x.com")
+                .header("sec-fetch-site", "same-site")
+                .header("sec-fetch-mode", "cors")
+                .header("sec-fetch-dest", "empty")
+                .header("referer", "https://x.com/")
+                .header("accept-language", "zh-CN,zh;q=0.9")
+                .header("priority", "u=1, i")
+                .form(&form)
+                .send()
+                .await?;
+        // print response status
+        println!("Response status: {}", response.status());
+        // print cookies
+        let cookies = response.cookies();
+
+        let cookie_jar = reqwest::cookie::Jar::default();
+        for cookie in cookies {
+            // cookie = "foo=bar; Domain=yolo.local";
+            let cookie_str = format!("{}={}", cookie.name(), cookie.value());
+            let url = Url::parse("https://api.x.com")?;
+            cookie_jar.add_cookie_str(&cookie_str, &url);
+        }
+        // set guest  gt = 1820477076878868982
+        let cookie_str = "gt=1820486444403839064";
+        let url = Url::parse("https://api.x.com")?;
+        cookie_jar.add_cookie_str(&cookie_str, &url);
+
+        // set night_mode	2
+        let cookie_str = "night_mode=2";
+        let url = Url::parse("https://api.x.com")?;
+        cookie_jar.add_cookie_str(&cookie_str, &url);
+
+        // Create a reqwest client builder
+        let cookie_jar_arc = Arc::new(cookie_jar);
+        let client_builder = ClientBuilder::new().cookie_provider(cookie_jar_arc);
+        // Build the client
+        let client = match client_builder.build() {
+            Ok(client) => client,
+            Err(err) => {
+                eprintln!("Error building client: {}", err);
+                return Err(err.into());
+            }
+        };
+        self.set_client(client);
+        Ok(())
+    }
+
     // get user id by screen name without login
     pub async fn get_user_id_by_screen_name(
-        &self,
+        &mut self,
         req: UserByScreenNameRequest,
     ) -> Result<UserByScreenNameResponse> {
+        self.get_guest_id_cookie().await?;
         let req = req.into_request(self.client.clone());
         let res = req.send_request_and_log().await?;
         let text = res.text().await?;
@@ -111,10 +184,11 @@ impl ReAPI {
         Ok(res)
     }
 
-
     // user login
     pub async fn login_in(&mut self, login_req: TwitterLoginRequest) -> Result<(), anyhow::Error> {
-        let cookie_file_path = login_req.cookie_file_path.unwrap_or("cookies.json".to_string());
+        let cookie_file_path = login_req
+            .cookie_file_path
+            .unwrap_or("cookies.json".to_string());
         // get guest token
         let get_guest_token_req = GetGuestTokenRequest {
             bearer_token: BEARER_TOKEN.to_string(),
@@ -122,10 +196,10 @@ impl ReAPI {
 
         let req = get_guest_token_req.into_request(self.client.clone());
         let res = req.send_request_and_log().await?;
-        save_cookies_to_file(&res,cookie_file_path.as_str()).map_err(|e| anyhow!("save cookies failed: {}", e))?;
+        save_cookies_to_file(&res, cookie_file_path.as_str())
+            .map_err(|e| anyhow!("save cookies failed: {}", e))?;
         let op = res.json::<serde_json::Value>().await?;
         let guest_token = op.get("guest_token").unwrap().to_string();
-
 
         // flow start
         let data = json!(
@@ -148,7 +222,8 @@ impl ReAPI {
         };
         let req = get_flow_token_req.into_request(self.client.clone());
         let res = req.send_request_and_log().await?;
-        save_cookies_to_file(&res,cookie_file_path.as_str()).map_err(|e| anyhow!("save cookies failed: {}", e))?;
+        save_cookies_to_file(&res, cookie_file_path.as_str())
+            .map_err(|e| anyhow!("save cookies failed: {}", e))?;
         let cookies = res.cookies();
         let mut csrf_token = "".to_string();
         for cookie in cookies {
@@ -157,7 +232,6 @@ impl ReAPI {
             }
         }
         let flow: Flow = res.json().await?;
-
 
         let flow_token = parse_flow(flow)?;
         // flow instrumentation step
@@ -180,7 +254,8 @@ impl ReAPI {
         };
         let req = get_flow_token_req.into_request(self.client.clone());
         let res = req.send_request_and_log().await?;
-        save_cookies_to_file(&res,cookie_file_path.as_str()).map_err(|e| anyhow!("save cookies failed: {}", e))?;
+        save_cookies_to_file(&res, cookie_file_path.as_str())
+            .map_err(|e| anyhow!("save cookies failed: {}", e))?;
         let flow: Flow = res.json().await?;
         let flow_token = parse_flow(flow)?;
 
@@ -211,7 +286,8 @@ impl ReAPI {
         };
         let req = get_flow_token_req.into_request(self.client.clone());
         let res = req.send_request_and_log().await?;
-        save_cookies_to_file(&res,cookie_file_path.as_str()).map_err(|e| anyhow!("save cookies failed: {}", e))?;
+        save_cookies_to_file(&res, cookie_file_path.as_str())
+            .map_err(|e| anyhow!("save cookies failed: {}", e))?;
         let flow: Flow = res.json().await?;
         let flow_token = parse_flow(flow)?;
 
@@ -236,7 +312,8 @@ impl ReAPI {
         };
         let req = get_flow_token_req.into_request(self.client.clone());
         let res = req.send_request_and_log().await?;
-        save_cookies_to_file(&res,cookie_file_path.as_str()).map_err(|e| anyhow!("save cookies failed: {}", e))?;
+        save_cookies_to_file(&res, cookie_file_path.as_str())
+            .map_err(|e| anyhow!("save cookies failed: {}", e))?;
         let flow: Flow = res.json().await?;
         let flow_token = parse_flow(flow)?;
 
@@ -259,7 +336,8 @@ impl ReAPI {
         };
         let req = get_flow_token_req.into_request(self.client.clone());
         let res = req.send_request_and_log().await?;
-        save_cookies_to_file(&res,cookie_file_path.as_str()).map_err(|e| anyhow!("save cookies failed: {}", e))?;
+        save_cookies_to_file(&res, cookie_file_path.as_str())
+            .map_err(|e| anyhow!("save cookies failed: {}", e))?;
         let flow: Flow = res.json().await?;
         let flow_token = parse_flow(flow);
 
@@ -268,7 +346,6 @@ impl ReAPI {
         self.set_csrf_token(csrf_token);
         Ok(())
     }
-
 
     pub async fn is_logged_in(&mut self) -> bool {
         let req = self
@@ -290,7 +367,7 @@ impl ReAPI {
         let res: VerifyCredentials = serde_json::from_str(&text).unwrap();
         res.errors.is_none()
     }
-    pub fn with_cookie_file(cookie_file_path:&str) -> Result<ReAPI, Box<dyn std::error::Error>> {
+    pub fn with_cookie_file(cookie_file_path: &str) -> Result<ReAPI, Box<dyn std::error::Error>> {
         // Load the cookies from the file
         // Open the file for reading
         let mut file = File::open(cookie_file_path)?;
@@ -382,8 +459,8 @@ impl ReAPI {
 
 #[cfg(test)]
 mod tests {
-    use crate::view::tweet_detail_view::UserTweetList;
     use super::*;
+    use crate::view::tweet_detail_view::UserTweetList;
 
     #[tokio::test]
     async fn test_login_in() {
@@ -400,8 +477,9 @@ mod tests {
     }
 
     #[tokio::test]
-    pub async fn test_login_with_cookies()-> Result<(),anyhow::Error> {
-        let mut api = ReAPI::with_cookie_file("xiaohao1_cookies.json").map_err(|e| anyhow!("error: {}", e))?;
+    pub async fn test_login_with_cookies() -> Result<(), anyhow::Error> {
+        let mut api = ReAPI::with_cookie_file("xiaohao1_cookies.json")
+            .map_err(|e| anyhow!("error: {}", e))?;
         let is_logged_in = api.is_logged_in().await;
         assert!(is_logged_in);
         Ok(())
@@ -422,7 +500,6 @@ mod tests {
         println!("{}", serde_json::to_string_pretty(&res).unwrap());
     }
 
-
     // get home page
     #[tokio::test]
     async fn test_get_user_home_page_content_view() {
@@ -434,19 +511,18 @@ mod tests {
             bearer_token: BEARER_TOKEN.to_string(),
         };
         let res = api.get_user_home_page_content(req).await.unwrap();
-        let tweet_list:UserTweetList = res.try_into().unwrap();
+        let tweet_list: UserTweetList = res.try_into().unwrap();
         // pretty json
         println!("{}", serde_json::to_string_pretty(&tweet_list).unwrap());
     }
 
     #[tokio::test]
     async fn test_get_user_id_by_screen_name() {
-        let api = ReAPI::with_cookie_file("ouhuang_cookies.json").unwrap();
+        let mut api = ReAPI::new();
 
         let req = UserByScreenNameRequest {
             screen_name: "xiaomucrypto".to_string(),
             bearer_token: BEARER_TOKEN.to_string(),
-            csrf_token: api.csrf_token.clone(),
         };
         let res = api.get_user_id_by_screen_name(req).await.unwrap();
         println!("{:?}", res);

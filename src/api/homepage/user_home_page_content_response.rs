@@ -604,7 +604,6 @@ pub struct FluffyLegacy {
     pub extended_entities: Option<ExtendedEntities>,
 }
 
-
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Entit {
     #[serde(rename = "user_mentions")]

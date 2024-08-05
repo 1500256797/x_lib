@@ -1,9 +1,9 @@
-use std::fs::File;
-use std::io::Write;
 use crate::traits::IntoRequestBuilder;
 use reqwest::{Client, RequestBuilder, Response};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
+use std::fs::File;
+use std::io::Write;
 
 pub struct TwitterLoginRequest {
     pub user_name: String,
@@ -72,7 +72,6 @@ pub struct Flow {
     pub js_instrumentation: Option<Insrumentation>,
 }
 
-
 impl IntoRequestBuilder for GetFlowTokenRequest {
     fn into_request(self, client: reqwest::Client) -> reqwest::RequestBuilder {
         client
@@ -99,7 +98,6 @@ impl IntoRequestBuilder for GetGuestTokenRequest {
             .header("Authorization", format!("Bearer {}", self.bearer_token))
     }
 }
-
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct CookieData {
