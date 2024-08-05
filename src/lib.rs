@@ -459,6 +459,7 @@ impl ReAPI {
 
 #[cfg(test)]
 mod tests {
+    use serde_json::Value;
     use super::*;
     use crate::view::tweet_detail_view::UserTweetList;
 
@@ -526,5 +527,41 @@ mod tests {
         };
         let res = api.get_user_id_by_screen_name(req).await.unwrap();
         println!("{:?}", res);
+    }
+
+    #[tokio::test]
+    async fn test_get_guest_token() ->Result<()> {
+        let client = Client::new();
+
+        let mut headers = reqwest::header::HeaderMap::new();
+        headers.insert("authority", "api.twitter.com".parse()?);
+        headers.insert("authorization", "Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA".parse()?);
+        headers.insert("origin", "https://twitter.com".parse()?);
+        headers.insert("referer", "https://twitter.com/".parse()?);
+        headers.insert("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36".parse()?);
+
+        let response: Value = client.post("https://api.twitter.com/1.1/guest/activate.json")
+            .headers(headers.clone())
+            .send()
+            .await?
+            .json()
+            .await?;
+
+        headers.insert("x-guest-token", response["guest_token"].as_str().unwrap().parse()?);
+
+        let params = [("variables", "{\"screen_name\":\"xiaomucrypto\",\"withSafetyModeUserFields\":true,\"withSuperFollowsUserFields\":true}")];
+
+        let response = client.get("https://twitter.com/i/api/graphql/mCbpQvZAw6zu_4PvuAUVVQ/UserByScreenName")
+            .headers(headers)
+            .query(&params)
+            .send()
+            .await?
+            .text()
+            .await?;
+
+        // print pretty 
+        println!("{}", serde_json::to_string_pretty(&response)?);
+        Ok(())
+
     }
 }
