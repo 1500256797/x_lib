@@ -5,53 +5,7 @@ use serde_json::Value;
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct UserByScreenNameResponse {
-    pub errors: Vec<Error>,
     pub data: Data,
-}
-
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Error {
-    pub message: String,
-    pub locations: Vec<Location>,
-    pub path: Vec<String>,
-    pub extensions: Extensions,
-    pub code: i64,
-    pub kind: String,
-    pub name: String,
-    pub source: String,
-    pub tracing: Tracing2,
-}
-
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Location {
-    pub line: i64,
-    pub column: i64,
-}
-
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Extensions {
-    pub name: String,
-    pub source: String,
-    pub code: i64,
-    pub kind: String,
-    pub tracing: Tracing,
-}
-
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Tracing {
-    #[serde(rename = "trace_id")]
-    pub trace_id: String,
-}
-
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Tracing2 {
-    #[serde(rename = "trace_id")]
-    pub trace_id: String,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -76,12 +30,13 @@ pub struct Result {
     pub rest_id: String,
     #[serde(rename = "affiliates_highlighted_label")]
     pub affiliates_highlighted_label: AffiliatesHighlightedLabel,
+    #[serde(rename = "has_graduated_access")]
+    pub has_graduated_access: bool,
     #[serde(rename = "is_blue_verified")]
     pub is_blue_verified: bool,
     #[serde(rename = "profile_image_shape")]
     pub profile_image_shape: String,
     pub legacy: Legacy,
-    pub professional: Professional,
     #[serde(rename = "tipjar_settings")]
     pub tipjar_settings: TipjarSettings,
     #[serde(rename = "legacy_extended_profile")]
@@ -96,6 +51,8 @@ pub struct Result {
     pub highlights_info: HighlightsInfo,
     #[serde(rename = "user_seed_tweet_count")]
     pub user_seed_tweet_count: i64,
+    #[serde(rename = "premium_gifting_eligible")]
+    pub premium_gifting_eligible: bool,
     #[serde(rename = "business_account")]
     pub business_account: BusinessAccount,
     #[serde(rename = "creator_subscriptions_count")]
@@ -104,11 +61,17 @@ pub struct Result {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct AffiliatesHighlightedLabel {}
+pub struct AffiliatesHighlightedLabel {
+}
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Legacy {
+    pub following: bool,
+    #[serde(rename = "can_dm")]
+    pub can_dm: bool,
+    #[serde(rename = "can_media_tag")]
+    pub can_media_tag: bool,
     #[serde(rename = "created_at")]
     pub created_at: String,
     #[serde(rename = "default_profile")]
@@ -154,6 +117,8 @@ pub struct Legacy {
     #[serde(rename = "translator_type")]
     pub translator_type: String,
     pub verified: bool,
+    #[serde(rename = "want_retweets")]
+    pub want_retweets: bool,
     #[serde(rename = "withheld_in_countries")]
     pub withheld_in_countries: Vec<Value>,
 }
@@ -172,49 +137,13 @@ pub struct Description {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct Professional {
-    #[serde(rename = "rest_id")]
-    pub rest_id: String,
-    #[serde(rename = "professional_type")]
-    pub professional_type: String,
-    pub category: Vec<Category>,
-}
-
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Category {
-    pub id: i64,
-    pub name: String,
-    #[serde(rename = "icon_name")]
-    pub icon_name: String,
-}
-
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
 pub struct TipjarSettings {
-    #[serde(rename = "is_enabled")]
-    pub is_enabled: bool,
-    #[serde(rename = "bandcamp_handle")]
-    pub bandcamp_handle: String,
-    #[serde(rename = "bitcoin_handle")]
-    pub bitcoin_handle: String,
-    #[serde(rename = "cash_app_handle")]
-    pub cash_app_handle: String,
-    #[serde(rename = "ethereum_handle")]
-    pub ethereum_handle: String,
-    #[serde(rename = "gofundme_handle")]
-    pub gofundme_handle: String,
-    #[serde(rename = "patreon_handle")]
-    pub patreon_handle: String,
-    #[serde(rename = "pay_pal_handle")]
-    pub pay_pal_handle: String,
-    #[serde(rename = "venmo_handle")]
-    pub venmo_handle: String,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct LegacyExtendedProfile {}
+pub struct LegacyExtendedProfile {
+}
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -269,4 +198,5 @@ pub struct HighlightsInfo {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct BusinessAccount {}
+pub struct BusinessAccount {
+}

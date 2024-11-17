@@ -94,7 +94,7 @@ pub struct GetGuestTokenRequest {
 impl IntoRequestBuilder for GetGuestTokenRequest {
     fn into_request(self, client: reqwest::Client) -> reqwest::RequestBuilder {
         client
-            .post("https://api.twitter.com/1.1/guest/activate.json")
+            .post("https://api.x.com/1.1/guest/activate.json")
             .header("Authorization", format!("Bearer {}", self.bearer_token))
     }
 }

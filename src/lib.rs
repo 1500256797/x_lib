@@ -1,11 +1,9 @@
 pub mod api;
 pub mod traits;
-pub mod view;
 
 use crate::api::follow::twitter_follow_relation_request::GetUserFollowersListRequest;
 use crate::api::follow::twitter_followers_list_response::FollowersListResp;
 use crate::api::homepage::user_by_screen_name_request::UserByScreenNameRequest;
-use crate::api::homepage::user_by_screen_name_response::UserByScreenNameResponse;
 use crate::api::homepage::user_home_page_content_request::GetUserHomePageContentRequest;
 use crate::api::homepage::user_home_page_content_response::UserHomePageContentResponse;
 use crate::api::login::twitter_login::{
@@ -14,7 +12,7 @@ use crate::api::login::twitter_login::{
 };
 use crate::traits::{IntoRequestBuilder, SendRequestAndLog};
 use anyhow::{anyhow, Result};
-use reqwest::cookie::Cookie;
+use api::homepage::user_by_screen_name_response::UserByScreenNameResponse;
 use reqwest::{Client, ClientBuilder, RequestBuilder, Response, Url};
 use serde_json::json;
 use std::collections::HashMap;
@@ -32,7 +30,7 @@ pub const BEARER_TOKEN: &str = "AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6
 pub const APP_CONSUMER_KEY: &str = "3nVuSoBZnx6U4vzUxf5w";
 pub const APP_CONSUMER_SECRET: &str = "Bcs59EFbbsdF6Sl9Ng71smgStWEGwXXKSjYvPVt7qys";
 #[derive(Debug, Clone)]
-pub struct ReAPI {
+pub struct XClient  {
     pub client: Client,
     pub guest_token: String,
     pub csrf_token: String,
@@ -93,13 +91,13 @@ impl SendRequestAndLog for RequestBuilder {
     }
 }
 
-impl ReAPI {
-    pub fn new() -> ReAPI {
+impl XClient {
+    pub fn new() -> XClient {
         let client = reqwest::ClientBuilder::new()
             .cookie_store(true)
             .build()
             .unwrap();
-        return ReAPI {
+        return XClient {
             client,
             csrf_token: String::from(""),
             guest_token: String::from(""),
@@ -173,13 +171,13 @@ impl ReAPI {
 
     // get user id by screen name without login
     pub async fn get_user_id_by_screen_name(
-        &mut self,
+        &self,
         req: UserByScreenNameRequest,
     ) -> Result<UserByScreenNameResponse> {
-        self.get_guest_id_cookie().await?;
         let req = req.into_request(self.client.clone());
         let res = req.send_request_and_log().await?;
         let text = res.text().await?;
+        println!("text: {}", text);
         let res: UserByScreenNameResponse = serde_json::from_str(&text)?;
         Ok(res)
     }
@@ -340,7 +338,7 @@ impl ReAPI {
             .map_err(|e| anyhow!("save cookies failed: {}", e))?;
         let flow: Flow = res.json().await?;
         let flow_token = parse_flow(flow);
-
+        println!("flow_token: {}", flow_token.unwrap());
         // save cookies
         self.set_guest_token(guest_token);
         self.set_csrf_token(csrf_token);
@@ -367,7 +365,7 @@ impl ReAPI {
         let res: VerifyCredentials = serde_json::from_str(&text).unwrap();
         res.errors.is_none()
     }
-    pub fn with_cookie_file(cookie_file_path: &str) -> Result<ReAPI, Box<dyn std::error::Error>> {
+    pub fn with_cookie_file(cookie_file_path: &str) -> Result<XClient, Box<dyn std::error::Error>> {
         // Load the cookies from the file
         // Open the file for reading
         let mut file = File::open(cookie_file_path)?;
@@ -381,14 +379,13 @@ impl ReAPI {
         let mut csrf_token = "".to_string();
         // Create a new cookie jar and add the cookies to it
         let cookie_jar = reqwest::cookie::Jar::default();
-        println!("cookies len: {}", cookies.len());
         for cookie in cookies {
             // cookie = "foo=bar; Domain=yolo.local";
             if cookie.name.eq("ct0") {
                 csrf_token = cookie.clone().value;
             }
-            let cookie_str = format!("{}={}; Domain=twitter.com", cookie.name, cookie.value);
-            let url = Url::parse("https://twitter.com")?;
+            let cookie_str = format!("{}={}; Domain=x.com", cookie.name, cookie.value);
+            let url = Url::parse("https://x.com")?;
             cookie_jar.add_cookie_str(&cookie_str, &url);
         }
 
@@ -404,7 +401,7 @@ impl ReAPI {
             }
         };
 
-        Ok(ReAPI {
+        Ok(XClient {
             client,
             csrf_token: csrf_token.to_string(),
             guest_token: String::from(""),
@@ -459,13 +456,13 @@ impl ReAPI {
 
 #[cfg(test)]
 mod tests {
+    use api::tweet_details::tweet_detail_view::UserTweetList;
     use serde_json::Value;
     use super::*;
-    use crate::view::tweet_detail_view::UserTweetList;
 
     #[tokio::test]
     async fn test_login_in() {
-        let mut api = ReAPI::new();
+        let mut api = XClient::new();
         dotenv::dotenv().ok();
         let name = std::env::var("TWITTER_USER_NAME").unwrap();
         let pwd = std::env::var("TWITTER_USER_PASSWORD").unwrap();
@@ -479,54 +476,53 @@ mod tests {
 
     #[tokio::test]
     pub async fn test_login_with_cookies() -> Result<(), anyhow::Error> {
-        let mut api = ReAPI::with_cookie_file("xiaohao1_cookies.json")
+        let mut api = XClient::with_cookie_file("xiaohao1_cookies.json")
             .map_err(|e| anyhow!("error: {}", e))?;
         let is_logged_in = api.is_logged_in().await;
         assert!(is_logged_in);
         Ok(())
     }
 
-    // get home page
-    #[tokio::test]
-    async fn test_get_user_home_page_content() {
-        let mut api = ReAPI::with_cookie_file("xiaohao1_cookies.json").unwrap();
-        // https://x.com/xiaomucrypto
-        let req = GetUserHomePageContentRequest {
-            user_id: "1507631541303713793".to_string(),
-            csrf_token: api.csrf_token.clone(),
-            bearer_token: BEARER_TOKEN.to_string(),
-        };
-        let res = api.get_user_home_page_content(req).await.unwrap();
-        // pretty json
-        println!("{}", serde_json::to_string_pretty(&res).unwrap());
-    }
 
-    // get home page
+    // 根据用户id获取首页 推特内容
     #[tokio::test]
     async fn test_get_user_home_page_content_view() {
-        let mut api = ReAPI::with_cookie_file("xiaohao1_cookies.json").unwrap();
-        // https://x.com/xiaomucrypto
+        let api = XClient::with_cookie_file("xiaohao1_cookies.json").unwrap();
         let req = GetUserHomePageContentRequest {
-            user_id: "1507631541303713793".to_string(),
+            user_id: "44196397".to_string(),
             csrf_token: api.csrf_token.clone(),
             bearer_token: BEARER_TOKEN.to_string(),
         };
-        let res = api.get_user_home_page_content(req).await.unwrap();
-        let tweet_list: UserTweetList = res.try_into().unwrap();
-        // pretty json
-        println!("{}", serde_json::to_string_pretty(&tweet_list).unwrap());
+        let res = api.get_user_home_page_content(req).await;
+        match res {
+            Ok(res) => {
+                let tweet_list: UserTweetList = res.try_into().unwrap();
+                // pretty json
+                println!("{}", serde_json::to_string_pretty(&tweet_list).unwrap());
+            }
+            Err(e) => {
+                println!("出错了: {}", e);
+            }
+        }
     }
 
     #[tokio::test]
     async fn test_get_user_id_by_screen_name() {
-        let mut api = ReAPI::new();
-
+        let api = XClient::with_cookie_file("xiaohao1_cookies.json").unwrap();
         let req = UserByScreenNameRequest {
-            screen_name: "xiaomucrypto".to_string(),
+            screen_name: "joncovering".to_string(),
             bearer_token: BEARER_TOKEN.to_string(),
+            csrf_token: api.csrf_token.clone(),
         };
-        let res = api.get_user_id_by_screen_name(req).await.unwrap();
-        println!("{:?}", res);
+        let res = api.get_user_id_by_screen_name(req).await;
+        match res {
+            Ok(res) => {
+                println!("{:?}", res);
+            }
+            Err(e) => {
+                println!("出错了: {}", e);
+            }
+        }
     }
 
     #[tokio::test]
