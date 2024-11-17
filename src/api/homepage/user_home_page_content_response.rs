@@ -243,8 +243,8 @@ pub struct EditControl {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Views {
-    pub count: String,
-    pub state: String,
+    pub count: Option<String>,
+    pub state: Option<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -577,8 +577,8 @@ pub struct EditControl2 {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Views2 {
-    pub count: String,
-    pub state: String,
+    pub count: Option<String>,
+    pub state: Option<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -819,8 +819,8 @@ pub struct EditControl3 {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Views3 {
-    pub count: String,
-    pub state: String,
+    pub count: Option<String>,
+    pub state: Option<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -1444,8 +1444,8 @@ pub struct EditControl4 {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Views4 {
-    pub count: String,
-    pub state: String,
+    pub count: Option<String>,
+    pub state: Option<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
