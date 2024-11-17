@@ -1797,7 +1797,7 @@ pub struct Legacy11 {
 #[serde(rename_all = "camelCase")]
 pub struct Entities9 {
     pub description: Description5,
-    pub url: Url9,
+    pub url: Option<Url9>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -1884,7 +1884,7 @@ pub struct AffiliatesHighlightedLabel6 {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Label2 {
-    pub url: Url11,
+    pub url: Option<Url11>,
     pub badge: Badge2,
     pub description: String,
     pub user_label_type: String,
@@ -1970,7 +1970,7 @@ pub struct Legacy12 {
 #[serde(rename_all = "camelCase")]
 pub struct Entities10 {
     pub description: Description6,
-    pub url: Url12,
+    pub url: Option<Url12>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]

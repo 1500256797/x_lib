@@ -457,7 +457,7 @@ mod tests {
     async fn test_get_user_home_page_content_view() {
         let api = XClient::with_cookie_file("xiaohao1_cookies.json").unwrap();
         let req = GetUserHomePageContentRequest {
-            user_id: "44196397".to_string(),
+            user_id: "1483495485889564674".to_string(),
             csrf_token: api.csrf_token.clone(),
             bearer_token: BEARER_TOKEN.to_string(),
         };
