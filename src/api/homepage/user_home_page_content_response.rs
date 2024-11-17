@@ -661,7 +661,7 @@ pub struct AffiliatesHighlightedLabel3 {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Label {
-    pub url: Url,
+    pub url: Option<Url>,
     pub badge: Badge,
     pub description: String,
     pub user_label_type: String,
@@ -671,14 +671,14 @@ pub struct Label {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Url {
-    pub url: String,
+    pub url: Option<String>,
     pub url_type: String,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Badge {
-    pub url: String,
+    pub url: Option<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -763,7 +763,7 @@ pub struct Url2 {
     pub display_url: String,
     #[serde(rename = "expanded_url")]
     pub expanded_url: String,
-    pub url: String,
+    pub url: Option<String>,
     pub indices: Vec<i64>,
 }
 
@@ -780,7 +780,7 @@ pub struct Url4 {
     pub display_url: String,
     #[serde(rename = "expanded_url")]
     pub expanded_url: String,
-    pub url: String,
+    pub url: Option<String>,
     pub indices: Vec<i64>,
 }
 
@@ -897,7 +897,7 @@ pub struct Url5 {
     pub display_url: String,
     #[serde(rename = "expanded_url")]
     pub expanded_url: String,
-    pub url: String,
+    pub url: Option<String>,
     pub indices: Vec<i64>,
 }
 
@@ -915,7 +915,7 @@ pub struct UserMention {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct QuotedStatusPermalink {
-    pub url: String,
+    pub url: Option<String>,
     pub expanded: String,
     pub display: String,
 }
@@ -1055,14 +1055,14 @@ pub struct Url6 {
     pub display_url: String,
     #[serde(rename = "expanded_url")]
     pub expanded_url: String,
-    pub url: String,
+    pub url: Option<String>,
     pub indices: Vec<i64>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct QuotedStatusPermalink2 {
-    pub url: String,
+    pub url: Option<String>,
     pub expanded: String,
     pub display: String,
 }
@@ -1089,7 +1089,7 @@ pub struct Legacy7 {
     #[serde(rename = "card_platform")]
     pub card_platform: CardPlatform,
     pub name: String,
-    pub url: String,
+    pub url: Option<String>,
     #[serde(rename = "user_refs_results")]
     pub user_refs_results: Vec<Value>,
 }
@@ -1121,7 +1121,7 @@ pub struct Value {
 pub struct ImageValue {
     pub height: i64,
     pub width: i64,
-    pub url: String,
+    pub url: Option<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -1221,7 +1221,7 @@ pub struct Url7 {
     pub display_url: String,
     #[serde(rename = "expanded_url")]
     pub expanded_url: String,
-    pub url: String,
+    pub url: Option<String>,
     pub indices: Vec<i64>,
 }
 
@@ -1582,7 +1582,7 @@ pub struct Url8 {
     pub display_url: String,
     #[serde(rename = "expanded_url")]
     pub expanded_url: String,
-    pub url: String,
+    pub url: Option<String>,
     pub indices: Vec<i64>,
 }
 
@@ -1608,7 +1608,7 @@ pub struct Legacy10 {
     #[serde(rename = "card_platform")]
     pub card_platform: CardPlatform2,
     pub name: String,
-    pub url: String,
+    pub url: Option<String>,
     #[serde(rename = "user_refs_results")]
     pub user_refs_results: Vec<UserRefsResult>,
 }
@@ -1642,7 +1642,7 @@ pub struct Value2 {
 pub struct ImageValue2 {
     pub height: i64,
     pub width: i64,
-    pub url: String,
+    pub url: Option<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -1785,7 +1785,7 @@ pub struct Legacy11 {
     pub statuses_count: i64,
     #[serde(rename = "translator_type")]
     pub translator_type: String,
-    pub url: String,
+    pub url: Option<String>,
     pub verified: bool,
     #[serde(rename = "want_retweets")]
     pub want_retweets: bool,
@@ -1819,7 +1819,7 @@ pub struct Url10 {
     pub display_url: String,
     #[serde(rename = "expanded_url")]
     pub expanded_url: String,
-    pub url: String,
+    pub url: Option<String>,
     pub indices: Vec<i64>,
 }
 
@@ -1894,14 +1894,14 @@ pub struct Label2 {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Url11 {
-    pub url: String,
+    pub url: Option<String>,
     pub url_type: String,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Badge2 {
-    pub url: String,
+    pub url: Option<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -1956,7 +1956,7 @@ pub struct Legacy12 {
     pub statuses_count: i64,
     #[serde(rename = "translator_type")]
     pub translator_type: String,
-    pub url: String,
+    pub url: Option<String>,
     pub verified: bool,
     #[serde(rename = "want_retweets")]
     pub want_retweets: bool,
@@ -1992,7 +1992,7 @@ pub struct Url13 {
     pub display_url: String,
     #[serde(rename = "expanded_url")]
     pub expanded_url: String,
-    pub url: String,
+    pub url: Option<String>,
     pub indices: Vec<i64>,
 }
 
@@ -2061,7 +2061,7 @@ pub struct Footer {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct LandingUrl {
-    pub url: String,
+    pub url: Option<String>,
     pub url_type: String,
 }
 
