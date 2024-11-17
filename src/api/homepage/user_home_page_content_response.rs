@@ -235,9 +235,9 @@ pub struct EditControl {
     #[serde(rename = "editable_until_msecs")]
     pub editable_until_msecs: Option<String>,
     #[serde(rename = "is_edit_eligible")]
-    pub is_edit_eligible: bool,
+    pub is_edit_eligible: Option<bool>,
     #[serde(rename = "edits_remaining")]
-    pub edits_remaining: String,
+    pub edits_remaining: Option<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -569,9 +569,9 @@ pub struct EditControl2 {
     #[serde(rename = "editable_until_msecs")]
     pub editable_until_msecs: Option<String>,
     #[serde(rename = "is_edit_eligible")]
-    pub is_edit_eligible: bool,
+    pub is_edit_eligible: Option<bool>,
     #[serde(rename = "edits_remaining")]
-    pub edits_remaining: String,
+    pub edits_remaining: Option<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -811,9 +811,9 @@ pub struct EditControl3 {
     #[serde(rename = "editable_until_msecs")]
     pub editable_until_msecs: Option<String>,
     #[serde(rename = "is_edit_eligible")]
-    pub is_edit_eligible: bool,
+    pub is_edit_eligible: Option<bool>,
     #[serde(rename = "edits_remaining")]
-    pub edits_remaining: String,
+    pub edits_remaining: Option<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -1436,9 +1436,9 @@ pub struct EditControl4 {
     #[serde(rename = "editable_until_msecs")]
     pub editable_until_msecs: Option<String>,
     #[serde(rename = "is_edit_eligible")]
-    pub is_edit_eligible: bool,
+    pub is_edit_eligible: Option<bool>,
     #[serde(rename = "edits_remaining")]
-    pub edits_remaining: String,
+    pub edits_remaining: Option<String>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
