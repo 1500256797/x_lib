@@ -93,17 +93,6 @@ impl TryFrom<UserHomePageContentResponse> for UserTweetList {
                         // let content = entry.content.item_content.as_ref().unwrap();
                         let tweet_result = content.tweet_results.result.as_ref().unwrap();
                         let tweet_detail_legacy = tweet_result.legacy.clone();
-                        let medias = tweet_result.legacy.entities.media.as_ref();
-                        let mut tweet_media_urls: Vec<String> = Vec::new();
-                        match medias {
-                            Some(media) => {
-                                tweet_media_urls = media
-                                    .iter()
-                                    .map(|x| x.media_url_https.clone())
-                                    .collect::<Vec<String>>();
-                            }
-                            None => {}
-                        }
                         let tweet_detail = TweetDetail {
                             tweet_id: tweet_detail_legacy.id_str,
                             user_id: tweet_detail_legacy.user_id_str,
@@ -114,7 +103,7 @@ impl TryFrom<UserHomePageContentResponse> for UserTweetList {
                             reply_count: tweet_detail_legacy.reply_count,
                             bookmark_count: tweet_detail_legacy.bookmark_count,
                             lang: tweet_detail_legacy.lang.clone(),
-                            media: tweet_media_urls,
+                            media: vec![],
                             qutoe_tweet_url: tweet_detail_legacy
                                 .quoted_status_permalink
                                 .as_ref()

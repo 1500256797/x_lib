@@ -1,5 +1,5 @@
 
-use std::{collections::HashMap, fs::File, io::Read, sync::Arc};
+use std::{collections::HashMap, fs::File, io::{Read, Write}, sync::Arc};
 use reqwest::{Client, ClientBuilder, RequestBuilder, Response, Url};
 use serde_json::json;
 use crate::{api::{follow::{twitter_follow_relation_request::GetUserFollowersListRequest, twitter_followers_list_response::FollowersListResp}, homepage::{user_by_screen_name_request::UserByScreenNameRequest, user_by_screen_name_response::UserByScreenNameResponse, user_home_page_content_request::GetUserHomePageContentRequest, user_home_page_content_response::UserHomePageContentResponse}, login::twitter_login::{save_cookies_to_file, CookieData, Flow, GetFlowTokenRequest, GetGuestTokenRequest, TwitterLoginRequest, VerifyCredentials}}, traits::{IntoRequestBuilder, SendRequestAndLog}};
@@ -403,6 +403,9 @@ impl XClient {
         let req = req.into_request(self.client.clone());
         let res = req.send_request_and_log().await?;
         let text = res.text().await?;
+        // write to file
+        let mut file = File::create("user_home_page_content.json").unwrap();
+        file.write_all(text.as_bytes()).unwrap();
         let res: UserHomePageContentResponse = serde_json::from_str(&text)?;
         Ok(res)
     }
@@ -475,7 +478,7 @@ mod tests {
     async fn test_get_user_id_by_screen_name() {
         let api = XClient::with_cookie_file("xiaohao1_cookies.json").unwrap();
         let req = UserByScreenNameRequest {
-            screen_name: "joncovering".to_string(),
+            screen_name: "bwenews".to_string(),
             bearer_token: BEARER_TOKEN.to_string(),
             csrf_token: api.csrf_token.clone(),
         };
