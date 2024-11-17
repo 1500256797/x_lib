@@ -265,12 +265,12 @@ pub struct NoteTweetResults {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Result4 {
-    pub id: String,
-    pub text: String,
+    pub id: Option<String>,
+    pub text: Option<String>,
     #[serde(rename = "entity_set")]
-    pub entity_set: EntitySet,
+    pub entity_set: Option<EntitySet>,
     pub richtext: Option<Richtext>,
-    pub media: Media,
+    pub media: Option<Media>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -305,7 +305,7 @@ pub struct RichtextTag {
 #[serde(rename_all = "camelCase")]
 pub struct Media {
     #[serde(rename = "inline_media")]
-    pub inline_media: Vec<Value>,
+    pub inline_media: Option<Vec<Value>>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -1181,12 +1181,12 @@ pub struct NoteTweetResults3 {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Result11 {
-    pub id: String,
-    pub text: String,
+    pub id: Option<String>,
+    pub text: Option<String>,
     #[serde(rename = "entity_set")]
-    pub entity_set: EntitySet3,
+    pub entity_set: Option<EntitySet3>,
     pub richtext: Option<Richtext2>,
-    pub media: Media2,
+    pub media: Option<Media2>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -1466,12 +1466,12 @@ pub struct NoteTweetResults4 {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Result14 {
-    pub id: String,
-    pub text: String,
+    pub id: Option<String>,
+    pub text: Option<String>,
     #[serde(rename = "entity_set")]
-    pub entity_set: EntitySet4,
+    pub entity_set: Option<EntitySet4>,
     pub richtext: Option<Richtext3>,
-    pub media: Media3,
+    pub media: Option<Media3>,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
