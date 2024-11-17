@@ -1,10 +1,32 @@
-
-use std::{collections::HashMap, fs::File, io::{Read, Write}, sync::Arc};
-use reqwest::{Client, ClientBuilder, RequestBuilder, Response, Url};
-use serde_json::json;
-use crate::{api::{follow::{twitter_follow_relation_request::GetUserFollowersListRequest, twitter_followers_list_response::FollowersListResp}, homepage::{user_by_screen_name_request::UserByScreenNameRequest, user_by_screen_name_response::UserByScreenNameResponse, user_home_page_content_request::GetUserHomePageContentRequest, user_home_page_content_response::UserHomePageContentResponse}, login::twitter_login::{save_cookies_to_file, CookieData, Flow, GetFlowTokenRequest, GetGuestTokenRequest, TwitterLoginRequest, VerifyCredentials}}, traits::{IntoRequestBuilder, SendRequestAndLog}};
+use crate::{
+    api::{
+        follow::{
+            twitter_follow_relation_request::GetUserFollowersListRequest,
+            twitter_followers_list_response::FollowersListResp,
+        },
+        homepage::{
+            user_by_screen_name_request::UserByScreenNameRequest,
+            user_by_screen_name_response::UserByScreenNameResponse,
+            user_home_page_content_request::GetUserHomePageContentRequest,
+            user_home_page_content_response::UserHomePageContentResponse,
+        },
+        login::twitter_login::{
+            save_cookies_to_file, CookieData, Flow, GetFlowTokenRequest, GetGuestTokenRequest,
+            TwitterLoginRequest, VerifyCredentials,
+        },
+    },
+    traits::{IntoRequestBuilder, SendRequestAndLog},
+};
 pub use anyhow::anyhow;
 pub use anyhow::Result;
+use reqwest::{Client, ClientBuilder, RequestBuilder, Response, Url};
+use serde_json::json;
+use std::{
+    collections::HashMap,
+    fs::File,
+    io::{Read, Write},
+    sync::Arc,
+};
 pub const LOGIN_URL: &str = "https://api.twitter.com/1.1/onboarding/task.json";
 pub const LOGOUR_URL: &str = "https://api.twitter.com/1.1/account/logout.json";
 pub const GUEST_ACTIVE_URL: &str = "https://api.twitter.com/1.1/guest/activate.json";
@@ -16,7 +38,7 @@ pub const APP_CONSUMER_KEY: &str = "3nVuSoBZnx6U4vzUxf5w";
 pub const APP_CONSUMER_SECRET: &str = "Bcs59EFbbsdF6Sl9Ng71smgStWEGwXXKSjYvPVt7qys";
 
 #[derive(Debug, Clone)]
-pub struct XClient  {
+pub struct XClient {
     pub client: Client,
     pub guest_token: String,
     pub csrf_token: String,
@@ -411,12 +433,13 @@ impl XClient {
     }
 }
 
-
-
 #[cfg(test)]
 mod tests {
+    use crate::api::{
+        homepage::user_home_page_content_request::GetUserHomePageContentRequest,
+        tweet_details::tweet_detail_view::UserTweetList,
+    };
     use serde_json::Value;
-    use crate::api::{homepage::user_home_page_content_request::GetUserHomePageContentRequest, tweet_details::tweet_detail_view::UserTweetList};
 
     use super::*;
 
@@ -450,7 +473,6 @@ mod tests {
         assert!(is_logged_in);
         Ok(())
     }
-
 
     // 根据用户id获取首页 推特内容
     #[tokio::test]
@@ -494,7 +516,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_get_guest_token() ->Result<()> {
+    async fn test_get_guest_token() -> Result<()> {
         let client = Client::new();
 
         let mut headers = reqwest::header::HeaderMap::new();
@@ -504,18 +526,23 @@ mod tests {
         headers.insert("referer", "https://twitter.com/".parse()?);
         headers.insert("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36".parse()?);
 
-        let response: Value = client.post("https://api.twitter.com/1.1/guest/activate.json")
+        let response: Value = client
+            .post("https://api.twitter.com/1.1/guest/activate.json")
             .headers(headers.clone())
             .send()
             .await?
             .json()
             .await?;
 
-        headers.insert("x-guest-token", response["guest_token"].as_str().unwrap().parse()?);
+        headers.insert(
+            "x-guest-token",
+            response["guest_token"].as_str().unwrap().parse()?,
+        );
 
         let params = [("variables", "{\"screen_name\":\"xiaomucrypto\",\"withSafetyModeUserFields\":true,\"withSuperFollowsUserFields\":true}")];
 
-        let response = client.get("https://twitter.com/i/api/graphql/mCbpQvZAw6zu_4PvuAUVVQ/UserByScreenName")
+        let response = client
+            .get("https://twitter.com/i/api/graphql/mCbpQvZAw6zu_4PvuAUVVQ/UserByScreenName")
             .headers(headers)
             .query(&params)
             .send()
@@ -523,9 +550,8 @@ mod tests {
             .text()
             .await?;
 
-        // print pretty 
+        // print pretty
         println!("{}", serde_json::to_string_pretty(&response)?);
         Ok(())
-
     }
 }

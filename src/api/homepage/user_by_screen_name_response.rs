@@ -61,8 +61,7 @@ pub struct Result {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct AffiliatesHighlightedLabel {
-}
+pub struct AffiliatesHighlightedLabel {}
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -137,13 +136,11 @@ pub struct Description {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct TipjarSettings {
-}
+pub struct TipjarSettings {}
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct LegacyExtendedProfile {
-}
+pub struct LegacyExtendedProfile {}
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -198,5 +195,4 @@ pub struct HighlightsInfo {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct BusinessAccount {
-}
+pub struct BusinessAccount {}

@@ -146,8 +146,7 @@ pub struct Result3 {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct AffiliatesHighlightedLabel {
-}
+pub struct AffiliatesHighlightedLabel {}
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -222,21 +221,19 @@ pub struct Description {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct TipjarSettings {
-}
+pub struct TipjarSettings {}
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct UnmentionData {
-}
+pub struct UnmentionData {}
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct EditControl {
     #[serde(rename = "edit_tweet_ids")]
-        pub edit_tweet_ids: Option<Vec<String>>,
+    pub edit_tweet_ids: Option<Vec<String>>,
     #[serde(rename = "editable_until_msecs")]
-    pub editable_until_msecs: String,
+    pub editable_until_msecs: Option<String>,
     #[serde(rename = "is_edit_eligible")]
     pub is_edit_eligible: bool,
     #[serde(rename = "edits_remaining")]
@@ -483,8 +480,7 @@ pub struct Result6 {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct AffiliatesHighlightedLabel2 {
-}
+pub struct AffiliatesHighlightedLabel2 {}
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -559,13 +555,11 @@ pub struct Description2 {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct TipjarSettings2 {
-}
+pub struct TipjarSettings2 {}
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct UnmentionData2 {
-}
+pub struct UnmentionData2 {}
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -573,7 +567,7 @@ pub struct EditControl2 {
     #[serde(rename = "edit_tweet_ids")]
     pub edit_tweet_ids: Option<Vec<String>>,
     #[serde(rename = "editable_until_msecs")]
-    pub editable_until_msecs: String,
+    pub editable_until_msecs: Option<String>,
     #[serde(rename = "is_edit_eligible")]
     pub is_edit_eligible: bool,
     #[serde(rename = "edits_remaining")]
@@ -807,16 +801,15 @@ pub struct Professional {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct UnmentionData3 {
-}
+pub struct UnmentionData3 {}
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct EditControl3 {
     #[serde(rename = "edit_tweet_ids")]
-        pub edit_tweet_ids: Option<Vec<String>>,
+    pub edit_tweet_ids: Option<Vec<String>>,
     #[serde(rename = "editable_until_msecs")]
-    pub editable_until_msecs: String,
+    pub editable_until_msecs: Option<String>,
     #[serde(rename = "is_edit_eligible")]
     pub is_edit_eligible: bool,
     #[serde(rename = "edits_remaining")]
@@ -1032,7 +1025,6 @@ pub struct Legacy6 {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Entities6 {
-
     pub hashtags: Vec<Value>,
     pub symbols: Vec<Symbol3>,
     pub timestamps: Vec<Value>,
@@ -1355,8 +1347,7 @@ pub struct Result13 {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct AffiliatesHighlightedLabel4 {
-}
+pub struct AffiliatesHighlightedLabel4 {}
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -1431,13 +1422,11 @@ pub struct Description4 {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct TipjarSettings4 {
-}
+pub struct TipjarSettings4 {}
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct UnmentionData4 {
-}
+pub struct UnmentionData4 {}
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -1445,7 +1434,7 @@ pub struct EditControl4 {
     #[serde(rename = "edit_tweet_ids")]
     pub edit_tweet_ids: Option<Vec<String>>,
     #[serde(rename = "editable_until_msecs")]
-    pub editable_until_msecs: String,
+    pub editable_until_msecs: Option<String>,
     #[serde(rename = "is_edit_eligible")]
     pub is_edit_eligible: bool,
     #[serde(rename = "edits_remaining")]
@@ -1730,8 +1719,7 @@ pub struct Result15 {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct AffiliatesHighlightedLabel5 {
-}
+pub struct AffiliatesHighlightedLabel5 {}
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -1844,8 +1832,7 @@ pub struct Category {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct TipjarSettings5 {
-}
+pub struct TipjarSettings5 {}
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -2017,8 +2004,7 @@ pub struct Category2 {
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct TipjarSettings6 {
-}
+pub struct TipjarSettings6 {}
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
