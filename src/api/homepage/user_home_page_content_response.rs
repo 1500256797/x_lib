@@ -234,7 +234,7 @@ pub struct UnmentionData {
 #[serde(rename_all = "camelCase")]
 pub struct EditControl {
     #[serde(rename = "edit_tweet_ids")]
-    pub edit_tweet_ids: Vec<String>,
+        pub edit_tweet_ids: Option<Vec<String>>,
     #[serde(rename = "editable_until_msecs")]
     pub editable_until_msecs: String,
     #[serde(rename = "is_edit_eligible")]
@@ -571,7 +571,7 @@ pub struct UnmentionData2 {
 #[serde(rename_all = "camelCase")]
 pub struct EditControl2 {
     #[serde(rename = "edit_tweet_ids")]
-    pub edit_tweet_ids: Vec<String>,
+    pub edit_tweet_ids: Option<Vec<String>>,
     #[serde(rename = "editable_until_msecs")]
     pub editable_until_msecs: String,
     #[serde(rename = "is_edit_eligible")]
@@ -814,7 +814,7 @@ pub struct UnmentionData3 {
 #[serde(rename_all = "camelCase")]
 pub struct EditControl3 {
     #[serde(rename = "edit_tweet_ids")]
-    pub edit_tweet_ids: Vec<String>,
+        pub edit_tweet_ids: Option<Vec<String>>,
     #[serde(rename = "editable_until_msecs")]
     pub editable_until_msecs: String,
     #[serde(rename = "is_edit_eligible")]
@@ -1443,7 +1443,7 @@ pub struct UnmentionData4 {
 #[serde(rename_all = "camelCase")]
 pub struct EditControl4 {
     #[serde(rename = "edit_tweet_ids")]
-    pub edit_tweet_ids: Vec<String>,
+    pub edit_tweet_ids: Option<Vec<String>>,
     #[serde(rename = "editable_until_msecs")]
     pub editable_until_msecs: String,
     #[serde(rename = "is_edit_eligible")]
