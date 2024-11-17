@@ -269,7 +269,7 @@ pub struct Result4 {
     pub text: String,
     #[serde(rename = "entity_set")]
     pub entity_set: EntitySet,
-    pub richtext: Richtext,
+    pub richtext: Option<Richtext>,
     pub media: Media,
 }
 
@@ -1185,7 +1185,7 @@ pub struct Result11 {
     pub text: String,
     #[serde(rename = "entity_set")]
     pub entity_set: EntitySet3,
-    pub richtext: Richtext2,
+    pub richtext: Option<Richtext2>,
     pub media: Media2,
 }
 
@@ -1470,7 +1470,7 @@ pub struct Result14 {
     pub text: String,
     #[serde(rename = "entity_set")]
     pub entity_set: EntitySet4,
-    pub richtext: Richtext3,
+    pub richtext: Option<Richtext3>,
     pub media: Media3,
 }
 
